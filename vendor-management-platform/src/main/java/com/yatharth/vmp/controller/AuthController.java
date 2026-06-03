@@ -1,5 +1,7 @@
 package com.yatharth.vmp.controller;
 
+import com.yatharth.vmp.dto.auth.AuthResponse;
+import com.yatharth.vmp.dto.auth.LoginRequest;
 import com.yatharth.vmp.dto.auth.RegisterRequest;
 import com.yatharth.vmp.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -19,5 +21,10 @@ public class AuthController {
     public String register(@RequestBody RegisterRequest registerRequest){
 
         return authService.register(registerRequest);
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody LoginRequest loginRequest){
+        return authService.login(loginRequest);
     }
 }

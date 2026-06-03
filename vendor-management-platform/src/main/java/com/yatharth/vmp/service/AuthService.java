@@ -1,8 +1,11 @@
 package com.yatharth.vmp.service;
 
+import com.yatharth.vmp.dto.auth.AuthResponse;
+import com.yatharth.vmp.dto.auth.LoginRequest;
 import com.yatharth.vmp.dto.auth.RegisterRequest;
 import com.yatharth.vmp.entity.User;
 import com.yatharth.vmp.repos.UserRepo;
+import com.yatharth.vmp.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,7 @@ public class AuthService {
 
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public String register(RegisterRequest registerRequest){
 
@@ -31,4 +35,20 @@ public class AuthService {
 
         return "User registered successfully";
     }
+
+    public AuthResponse login(LoginRequest loginRequest){
+        User user=userRepo.findByEmail(loginRequest.getEmail()).orElseThrow(()->
+                new RuntimeException("Invalid credentials"));
+
+        boolean matches=passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
+
+        if(!matches){
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        String token= jwtService.generateToken(user.getEmail());
+
+        return new AuthResponse(token);
+    }
+
 }
