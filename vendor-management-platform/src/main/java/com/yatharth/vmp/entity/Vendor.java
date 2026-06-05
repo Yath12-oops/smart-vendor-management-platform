@@ -1,5 +1,6 @@
 package com.yatharth.vmp.entity;
 
+import com.yatharth.vmp.entity.enums.VendorStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,8 @@ public class Vendor {
 
     private String panNumber;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private VendorStatus status;
 
     @OneToOne
     @JoinColumn(name = "user_id")

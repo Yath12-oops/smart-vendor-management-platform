@@ -1,13 +1,30 @@
 package com.yatharth.vmp.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.yatharth.vmp.entity.Vendor;
+import com.yatharth.vmp.service.VendorService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminController {
 
-    @GetMapping("/admin/test")
+    private final VendorService vendorService;
+
+    @GetMapping("/test")
     public String adminTest(){
         return "Welcome Admin";
     }
+
+    @PutMapping("/vendors/{id}/approve")
+    public Vendor approveVendor(@PathVariable Long id){
+        return vendorService.approveVendor(id);
+    }
+
+    @PutMapping("/vendors/{id}/reject")
+    public Vendor rejectVendor(@PathVariable Long id){
+        return vendorService.rejectVendor(id);
+    }
+
 }

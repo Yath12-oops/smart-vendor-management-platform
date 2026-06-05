@@ -4,6 +4,7 @@ import com.yatharth.vmp.dto.VendorRequest;
 import com.yatharth.vmp.dto.VendorResponse;
 import com.yatharth.vmp.entity.User;
 import com.yatharth.vmp.entity.Vendor;
+import com.yatharth.vmp.entity.enums.VendorStatus;
 import com.yatharth.vmp.exception.VendorNotFoundException;
 import com.yatharth.vmp.repos.UserRepo;
 import com.yatharth.vmp.repos.VendorRepo;
@@ -29,7 +30,7 @@ public class VendorService {
         vendor.setCompanyName(vendorRequest.getCompanyName());
         vendor.setGstNumber(vendorRequest.getGstNumber());
         vendor.setPanNumber(vendorRequest.getPanNumber());
-        vendor.setStatus("PENDING");
+        vendor.setStatus(VendorStatus.PENDING);
         vendor.setUser(user);
 
         return mapToResponse(vendorRepo.save(vendor));
@@ -76,7 +77,25 @@ public class VendorService {
                 vendor.getCompanyName(),
                 vendor.getGstNumber(),
                 vendor.getPanNumber(),
-                vendor.getStatus()
+                vendor.getStatus().name()
         );
+    }
+
+    public Vendor approveVendor(Long id){
+
+        Vendor vendor=vendorRepo.findById(id).orElseThrow(()->new VendorNotFoundException("Vendor not found"));
+
+        vendor.setStatus(VendorStatus.APPROVED);
+
+        return vendorRepo.save(vendor);
+    }
+
+    public Vendor rejectVendor(Long id){
+
+        Vendor vendor=vendorRepo.findById(id).orElseThrow(()->new VendorNotFoundException("Vendor not found"));
+
+        vendor.setStatus(VendorStatus.REJECTED);
+
+        return vendorRepo.save(vendor);
     }
 }
