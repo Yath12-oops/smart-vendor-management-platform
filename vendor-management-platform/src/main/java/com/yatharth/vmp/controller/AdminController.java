@@ -1,6 +1,8 @@
 package com.yatharth.vmp.controller;
 
+import com.yatharth.vmp.entity.Document;
 import com.yatharth.vmp.entity.Vendor;
+import com.yatharth.vmp.service.DocumentService;
 import com.yatharth.vmp.service.VendorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final VendorService vendorService;
+    private final DocumentService documentService;
 
     @GetMapping("/test")
     public String adminTest(){
@@ -27,4 +30,13 @@ public class AdminController {
         return vendorService.rejectVendor(id);
     }
 
+    @PutMapping("/documents/{id}/verify")
+    public Document verifyDocument(@PathVariable Long id){
+        return documentService.verifyDocument(id);
+    }
+
+    @PutMapping("/documents/{id}/reject")
+    public Document rejectDocument(@PathVariable Long id){
+        return documentService.rejectDocument(id);
+    }
 }

@@ -1,5 +1,7 @@
 package com.yatharth.vmp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.yatharth.vmp.entity.enums.DocumentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +24,11 @@ public class Document {
 
     private String filePath;
 
+    @Enumerated(EnumType.STRING)
+    private DocumentStatus status;
+
     @ManyToOne
     @JoinColumn(name = "vendor_id")
+    @JsonIgnore
     private Vendor vendor;
 }
