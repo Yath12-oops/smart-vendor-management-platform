@@ -9,7 +9,9 @@ import com.yatharth.vmp.repos.DocumentRepo;
 import com.yatharth.vmp.repos.VendorRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -19,18 +21,35 @@ public class DocumentService {
     private final DocumentRepo documentRepo;
     private final VendorRepo vendorRepo;
 
-    public Document uploadDocument(DocumentRequest request){
-        Vendor vendor=vendorRepo.findById(request.getVendorId())
-                .orElseThrow(()-> new VendorNotFoundException("Vendor not found"));
+    public Document uploadDocument(MultipartFile file,String documentType,Long vendorId) throws Exception{
+       Vendor vendor=vendorRepo.findById(vendorId).orElseThrow(()-> new VendorNotFoundException("Vendor not found"));
 
-        Document document=new Document();
-        document.setDocumentType(request.getDocumentType());
-        document.setFileName(request.getFileName());
-        document.setFilePath(request.getFilePath());
-        document.setVendor(vendor);
-        document.setStatus(DocumentStatus.PENDING);
+        String uploadDir = System.getProperty("user.dir")
+                + File.separator
+                + "uploads";
 
-        return documentRepo.save(document);
+       File directory=new File(uploadDir);
+
+       if(!directory.exists()) directory.mkdirs();
+
+       String filename=file.getOriginalFilename();
+
+        String filePath = uploadDir
+                + File.separator
+                + filename;
+
+        System.out.println(filePath);
+
+       file.transferTo(new File(filePath));
+
+       Document document=new Document();
+       document.setDocumentType(documentType);
+       document.setFileName(filename);
+       document.setFilePath(filePath);
+       document.setStatus(DocumentStatus.PENDING);
+       document.setVendor(vendor);
+
+       return documentRepo.save(document);
     }
 
     public List<Document> getDocumentsByVendor(Long vendorId){
