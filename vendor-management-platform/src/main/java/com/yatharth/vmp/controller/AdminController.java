@@ -1,7 +1,9 @@
 package com.yatharth.vmp.controller;
 
+import com.yatharth.vmp.dto.DashboardResponse;
 import com.yatharth.vmp.entity.Document;
 import com.yatharth.vmp.entity.Vendor;
+import com.yatharth.vmp.service.AdminService;
 import com.yatharth.vmp.service.DocumentService;
 import com.yatharth.vmp.service.VendorService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
-
+    private final AdminService adminService;
     private final VendorService vendorService;
     private final DocumentService documentService;
 
@@ -38,5 +40,10 @@ public class AdminController {
     @PutMapping("/documents/{id}/reject")
     public Document rejectDocument(@PathVariable Long id){
         return documentService.rejectDocument(id);
+    }
+
+    @GetMapping("/dashboard")
+    public DashboardResponse getDashboardStats(){
+        return adminService.getDashboardStats();
     }
 }
