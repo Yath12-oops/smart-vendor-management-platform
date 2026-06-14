@@ -74,6 +74,7 @@ public class VendorService {
     private VendorResponse mapToResponse(Vendor vendor) {
 
         return new VendorResponse(
+                vendor.getId(),
                 vendor.getCompanyName(),
                 vendor.getGstNumber(),
                 vendor.getPanNumber(),

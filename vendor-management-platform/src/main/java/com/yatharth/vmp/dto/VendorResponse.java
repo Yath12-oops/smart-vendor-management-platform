@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VendorResponse {
 
+    private Long id;
+
     private String companyName;
 
     private String gstNumber;
@@ -17,3 +19,4 @@ public class VendorResponse {
 
     private String status;
 }
+
