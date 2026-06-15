@@ -3,6 +3,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import VendorList from "./pages/VendorList";
 import ProtectedRoute from "./components/ProtectedRoute";
+import VendorDashboard from "./pages/VendorDashboard";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -25,6 +27,17 @@ function App() {
         </ProtectedRoute>
     }
 />
+
+<Route
+    path="/vendor-dashboard"
+    element={<VendorDashboard />}
+/>
+
+<Route
+    path="/register"
+    element={<Register />}
+/>
+
       </Routes>
     </BrowserRouter>
   );

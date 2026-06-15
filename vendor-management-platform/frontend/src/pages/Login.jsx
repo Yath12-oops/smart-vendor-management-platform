@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { login } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Login() {
 
@@ -15,11 +16,19 @@ function Login() {
     try {
         const response = await login(email, password);
 
-        localStorage.setItem("token", response.token);
+       localStorage.setItem("token", response.token);
 
-        console.log(response);
+localStorage.setItem("role", response.role);
 
-       navigate("/dashboard");
+if (response.role === "ADMIN") {
+
+    navigate("/dashboard");
+
+} else {
+
+    navigate("/vendor-dashboard");
+
+}
        
     } catch (error) {
         console.error(error);
@@ -56,7 +65,7 @@ marginBottom: "10px"
 >
 Smart Vendor Management </h2>
 
-
+{/* 
         <p
             style={{
                 color: "#cbd5e1",
@@ -64,7 +73,7 @@ Smart Vendor Management </h2>
             }}
         >
             Welcome Back Admin
-        </p>
+        </p> */}
 
         <form onSubmit={handleLogin}>
             <div
@@ -149,6 +158,27 @@ Smart Vendor Management </h2>
             >
                 Login
             </button>
+
+            <p
+    style={{
+        color: "white",
+        marginTop: "15px",
+        textAlign: "center"
+    }}
+>
+    Don't have an account?
+
+    <Link
+        to="/register"
+        style={{
+            color: "#60a5fa",
+            marginLeft: "5px"
+        }}
+    >
+        Register
+    </Link>
+</p>
+
         </form>
     </div>
 </div>

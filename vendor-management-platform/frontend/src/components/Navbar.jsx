@@ -1,8 +1,10 @@
-
 import { Link } from "react-router-dom";
 
 function Navbar() {
-    return (
+    
+const role = localStorage.getItem("role");
+
+return (
 
     <nav
         style={{
@@ -19,38 +21,82 @@ function Navbar() {
 
         <div>
 
-            <Link
-                to="/dashboard"
-                style={{
-                    color: "white",
-                    marginRight: "20px",
-                    textDecoration: "none"
-                }}
-            >
-                Dashboard
-            </Link>
+            {role === "ADMIN" && (
+                <>
+                    <Link
+                        to="/dashboard"
+                        style={{
+                            color: "white",
+                            marginRight: "20px",
+                            textDecoration: "none"
+                        }}
+                    >
+                        Dashboard
+                    </Link>
 
-            <Link
-                to="/vendors"
-                style={{
-                    color: "white",
-                    marginRight: "20px",
-                    textDecoration: "none"
-                }}
-            >
-                Vendors
-            </Link>
+                    <Link
+                        to="/vendors"
+                        style={{
+                            color: "white",
+                            marginRight: "20px",
+                            textDecoration: "none"
+                        }}
+                    >
+                        Vendors
+                    </Link>
+                </>
+            )}
+
+            {role === "VENDOR" && (
+                <>
+                    <Link
+                        to="/vendor-dashboard"
+                        style={{
+                            color: "white",
+                            marginRight: "20px",
+                            textDecoration: "none"
+                        }}
+                    >
+                        Vendor Dashboard
+                    </Link>
+
+                    <Link
+                        to="/profile"
+                        style={{
+                            color: "white",
+                            marginRight: "20px",
+                            textDecoration: "none"
+                        }}
+                    >
+                        My Profile
+                    </Link>
+
+                    <Link
+                        to="/documents"
+                        style={{
+                            color: "white",
+                            marginRight: "20px",
+                            textDecoration: "none"
+                        }}
+                    >
+                        My Documents
+                    </Link>
+                </>
+            )}
 
             <button
                 onClick={() => {
 
                     localStorage.removeItem("token");
+                    localStorage.removeItem("role");
 
                     window.location.href = "/";
                 }}
                 style={{
                     padding: "8px 15px",
-                    cursor: "pointer"
+                    cursor: "pointer",
+                    borderRadius: "6px",
+                    border: "none"
                 }}
             >
                 Logout
@@ -60,6 +106,8 @@ function Navbar() {
 
     </nav>
 );
+
+
 }
 
 export default Navbar;
