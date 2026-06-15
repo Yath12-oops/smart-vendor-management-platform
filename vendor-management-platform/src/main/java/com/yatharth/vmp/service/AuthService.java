@@ -4,7 +4,10 @@ import com.yatharth.vmp.dto.auth.AuthResponse;
 import com.yatharth.vmp.dto.auth.LoginRequest;
 import com.yatharth.vmp.dto.auth.RegisterRequest;
 import com.yatharth.vmp.entity.User;
+import com.yatharth.vmp.entity.Vendor;
+import com.yatharth.vmp.entity.enums.VendorStatus;
 import com.yatharth.vmp.repos.UserRepo;
+import com.yatharth.vmp.repos.VendorRepo;
 import com.yatharth.vmp.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +20,7 @@ public class AuthService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final VendorRepo vendorRepo;
 
     public String register(RegisterRequest registerRequest){
 
@@ -33,6 +37,20 @@ public class AuthService {
         user.setRole("VENDOR");
         userRepo.save(user);
 
+        Vendor vendor = new Vendor();
+
+        vendor.setCompanyName("");
+
+        vendor.setGstNumber("");
+
+        vendor.setPanNumber("");
+
+        vendor.setStatus(VendorStatus.PENDING);
+
+        vendor.setUser(user);
+
+        vendorRepo.save(vendor);
+
         return "User registered successfully";
     }
 
@@ -48,7 +66,7 @@ public class AuthService {
 
         String token= jwtService.generateToken(user.getEmail(), user.getRole());
 
-        return new AuthResponse(token);
+        return new AuthResponse(token, user.getRole());
     }
 
 }
