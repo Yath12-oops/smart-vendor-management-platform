@@ -15,10 +15,12 @@ function Login() {
 
     try {
         const response = await login(email, password);
-
-       localStorage.setItem("token", response.token);
+        
+localStorage.setItem("token", response.token);
 
 localStorage.setItem("role", response.role);
+
+localStorage.setItem("userId", response.userId);
 
 if (response.role === "ADMIN") {
 

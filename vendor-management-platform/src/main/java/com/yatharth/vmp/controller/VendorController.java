@@ -47,4 +47,12 @@ public class VendorController {
 
         return "Vendor deleted successfully";
     }
+
+    @GetMapping("/user/{userId}")
+    public VendorResponse getVendorByUserId(
+            @PathVariable Long userId
+    ) {
+        return vendorService.getVendorByUserId(userId);
+    }
+
 }

@@ -5,6 +5,8 @@ import VendorList from "./pages/VendorList";
 import ProtectedRoute from "./components/ProtectedRoute";
 import VendorDashboard from "./pages/VendorDashboard";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import Documents from "./pages/Documents";
 
 function App() {
   return (
@@ -36,6 +38,16 @@ function App() {
 <Route
     path="/register"
     element={<Register />}
+/>
+
+<Route
+    path="/profile"
+    element={<Profile />}
+/>
+
+<Route
+    path="/documents"
+    element={<Documents />}
 />
 
       </Routes>

@@ -99,4 +99,17 @@ public class VendorService {
 
         return vendorRepo.save(vendor);
     }
+
+    public VendorResponse getVendorByUserId(Long userId) {
+
+        User user = userRepo.findById(userId)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        Vendor vendor = vendorRepo.findByUser(user)
+                .orElseThrow(() ->
+                        new VendorNotFoundException("Vendor not found"));
+
+        return mapToResponse(vendor);
+    }
 }
