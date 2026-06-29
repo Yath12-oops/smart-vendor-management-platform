@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/documents")
 @RequiredArgsConstructor
-public class DocumentController {
+public class DocumentController{
 
     private final DocumentService documentService;
 

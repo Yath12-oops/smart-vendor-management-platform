@@ -2,7 +2,6 @@ package com.yatharth.vmp.controller;
 
 import com.yatharth.vmp.dto.VendorRequest;
 import com.yatharth.vmp.dto.VendorResponse;
-import com.yatharth.vmp.entity.Vendor;
 import com.yatharth.vmp.service.VendorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,26 +32,18 @@ public class VendorController {
     }
 
     @PutMapping("/{id}")
-    public VendorResponse updateVendor(
-            @PathVariable Long id,
-            @RequestBody VendorRequest request) {
-
+    public VendorResponse updateVendor(@PathVariable Long id, @RequestBody VendorRequest request) {
         return vendorService.updateVendor(id, request);
     }
 
     @DeleteMapping("/{id}")
     public String deleteVendor(@PathVariable Long id) {
-
         vendorService.deleteVendor(id);
-
         return "Vendor deleted successfully";
     }
 
     @GetMapping("/user/{userId}")
-    public VendorResponse getVendorByUserId(
-            @PathVariable Long userId
-    ) {
+    public VendorResponse getVendorByUserId(@PathVariable Long userId) {
         return vendorService.getVendorByUserId(userId);
     }
-
 }

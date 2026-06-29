@@ -3,10 +3,7 @@ package com.yatharth.vmp.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yatharth.vmp.entity.enums.DocumentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter

@@ -2,6 +2,7 @@ package com.yatharth.vmp.service;
 
 import com.yatharth.vmp.dto.VendorRequest;
 import com.yatharth.vmp.dto.VendorResponse;
+import com.yatharth.vmp.dto.convertors.VendorConvertors;
 import com.yatharth.vmp.entity.User;
 import com.yatharth.vmp.entity.Vendor;
 import com.yatharth.vmp.entity.enums.VendorStatus;
@@ -11,6 +12,7 @@ import com.yatharth.vmp.repos.VendorRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,26 +27,22 @@ public class VendorService {
                 .orElseThrow(() ->
                         new RuntimeException("User not found"));
 
-        Vendor vendor=new Vendor();
-
-        vendor.setCompanyName(vendorRequest.getCompanyName());
-        vendor.setGstNumber(vendorRequest.getGstNumber());
-        vendor.setPanNumber(vendorRequest.getPanNumber());
-        vendor.setStatus(VendorStatus.PENDING);
+        Vendor vendor=VendorConvertors.vendorRequestToVendor(vendorRequest);
         vendor.setUser(user);
 
-        return mapToResponse(vendorRepo.save(vendor));
+        return VendorConvertors.vendorToVendorResponse(vendorRepo.save(vendor));
     }
 
     public List<VendorResponse> getAllVendors() {
-        return vendorRepo.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        List<VendorResponse> list=new ArrayList<>();
+        for(Vendor vendor: vendorRepo.findAll()) {
+              list.add(VendorConvertors.vendorToVendorResponse(vendor));
+        }
+        return list;
     }
 
     public VendorResponse getVendorById(Long id) {
-        return mapToResponse(vendorRepo.findById(id)
+        return VendorConvertors.vendorToVendorResponse(vendorRepo.findById(id)
                 .orElseThrow(() ->
                         new VendorNotFoundException("Vendor not found")));
     }
@@ -59,7 +57,7 @@ public class VendorService {
         vendor.setGstNumber(request.getGstNumber());
         vendor.setPanNumber(request.getPanNumber());
 
-        return mapToResponse(vendorRepo.save(vendor));
+        return VendorConvertors.vendorToVendorResponse(vendorRepo.save(vendor));
     }
 
     public void deleteVendor(Long id) {
@@ -71,33 +69,18 @@ public class VendorService {
         vendorRepo.delete(vendor);
     }
 
-    private VendorResponse mapToResponse(Vendor vendor) {
-
-        return new VendorResponse(
-                vendor.getId(),
-                vendor.getCompanyName(),
-                vendor.getGstNumber(),
-                vendor.getPanNumber(),
-                vendor.getStatus().name()
-        );
-    }
-
-    public Vendor approveVendor(Long id){
+    public VendorResponse approveVendor(Long id){
 
         Vendor vendor=vendorRepo.findById(id).orElseThrow(()->new VendorNotFoundException("Vendor not found"));
-
         vendor.setStatus(VendorStatus.APPROVED);
-
-        return vendorRepo.save(vendor);
+        return VendorConvertors.vendorToVendorResponse(vendorRepo.save(vendor));
     }
 
-    public Vendor rejectVendor(Long id){
+    public VendorResponse rejectVendor(Long id){
 
         Vendor vendor=vendorRepo.findById(id).orElseThrow(()->new VendorNotFoundException("Vendor not found"));
-
         vendor.setStatus(VendorStatus.REJECTED);
-
-        return vendorRepo.save(vendor);
+        return VendorConvertors.vendorToVendorResponse(vendorRepo.save(vendor));
     }
 
     public VendorResponse getVendorByUserId(Long userId) {
@@ -110,6 +93,6 @@ public class VendorService {
                 .orElseThrow(() ->
                         new VendorNotFoundException("Vendor not found"));
 
-        return mapToResponse(vendor);
+        return VendorConvertors.vendorToVendorResponse(vendor);
     }
 }

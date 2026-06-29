@@ -3,22 +3,18 @@ package com.yatharth.vmp.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class VendorResponse {
+public class DocumentResponse {
 
     private Long id;
 
-    private String companyName;
+    private String vendorName;
 
-    private String gstNumber;
+    private String documentType;
 
-    private String panNumber;
+    private String fileName;
 
     private String status;
 }
-

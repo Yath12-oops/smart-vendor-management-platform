@@ -7,6 +7,7 @@ import VendorDashboard from "./pages/VendorDashboard";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Documents from "./pages/Documents";
+import AdminDocuments from "./pages/AdminDocuments";
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
 <Route
     path="/documents"
     element={<Documents />}
+/>
+<Route
+    path="/admin-documents"
+    element={
+        <ProtectedRoute>
+            <AdminDocuments />
+        </ProtectedRoute>
+    }
 />
 
       </Routes>

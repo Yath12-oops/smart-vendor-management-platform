@@ -1,5 +1,6 @@
 package com.yatharth.vmp.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
@@ -11,5 +12,6 @@ public class DocumentRequest {
 
     private String filePath;
 
+    @NotBlank
     private Long vendorId;
 }

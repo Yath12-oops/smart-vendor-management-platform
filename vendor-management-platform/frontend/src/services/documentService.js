@@ -1,52 +1,56 @@
-
-
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/documents";
+const API = "http://localhost:8080/admin/documents";
 
-export const getVendorDocuments = async (vendorId) => {
+export const getAllDocuments = async () => {
 
-const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-const response = await axios.get(
-    `${API_URL}/vendor/${vendorId}`,
-    {
+    const response = await axios.get(API, {
+
         headers: {
             Authorization: `Bearer ${token}`
         }
-    }
-);
 
-return response.data;
+    });
 
+    return response.data;
 };
 
-export const uploadDocument = async (
-file,
-documentType,
-vendorId
-) => {
+export const verifyDocument = async (id) => {
 
-const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-const formData = new FormData();
+    await axios.put(
 
-formData.append("file", file);
-formData.append("documentType", documentType);
-formData.append("vendorId", vendorId);
+        `http://localhost:8080/admin/documents/${id}/verify`,
 
-const response = await axios.post(
-    `${API_URL}/upload`,
-    formData,
-    {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data"
+        {},
+
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         }
-    }
-);
 
-return response.data;
+    );
+};
 
+export const rejectDocument = async (id) => {
 
+    const token = localStorage.getItem("token");
+
+    await axios.put(
+
+        `http://localhost:8080/admin/documents/${id}/reject`,
+
+        {},
+
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+    );
 };

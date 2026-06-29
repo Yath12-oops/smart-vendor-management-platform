@@ -44,6 +44,17 @@ return (
                     >
                         Vendors
                     </Link>
+
+                    <Link
+    to="/admin-documents"
+    style={{
+        color: "white",
+        marginRight: "20px",
+        textDecoration: "none"
+    }}
+>
+    Documents
+</Link>
                 </>
             )}
 

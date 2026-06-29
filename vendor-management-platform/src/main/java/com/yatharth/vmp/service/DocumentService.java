@@ -1,6 +1,6 @@
 package com.yatharth.vmp.service;
 
-import com.yatharth.vmp.dto.DocumentRequest;
+import com.yatharth.vmp.dto.DocumentResponse;
 import com.yatharth.vmp.entity.Document;
 import com.yatharth.vmp.entity.Vendor;
 import com.yatharth.vmp.entity.enums.DocumentStatus;
@@ -88,5 +88,25 @@ public class DocumentService {
         Path path=Paths.get(document.getFilePath());
 
         return new UrlResource(path.toUri());
+    }
+
+    public List<DocumentResponse> getAllDocuments() {
+
+        return documentRepo.findAll()
+                .stream()
+                .map(document -> new DocumentResponse(
+
+                        document.getId(),
+
+                        document.getVendor().getCompanyName(),
+
+                        document.getDocumentType(),
+
+                        document.getFileName(),
+
+                        document.getStatus().name()
+
+                ))
+                .toList();
     }
 }
