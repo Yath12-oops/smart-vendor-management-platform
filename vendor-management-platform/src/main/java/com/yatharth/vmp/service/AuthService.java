@@ -10,6 +10,8 @@ import com.yatharth.vmp.repos.UserRepo;
 import com.yatharth.vmp.repos.VendorRepo;
 import com.yatharth.vmp.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final VendorRepo vendorRepo;
+    private final JavaMailSender javaMailSender;
 
     public String register(RegisterRequest registerRequest){
 
@@ -51,7 +54,22 @@ public class AuthService {
 
         vendorRepo.save(vendor);
 
+        sendEmail(user);
+
         return "User registered successfully";
+    }
+
+    private void sendEmail(User user) {
+
+        String body="Hello"+ user.getName() + "your profile has been created. Please complete your details" +
+                "upload your documents";
+        SimpleMailMessage message= new SimpleMailMessage();
+        message.setSubject("Registration On Platform successful");
+        message.setFrom("sachdevayatharth12@gmail.com");
+        message.setTo(user.getEmail());
+        message.setText(body);
+
+        javaMailSender.send(message);
     }
 
     public AuthResponse login(LoginRequest loginRequest){
