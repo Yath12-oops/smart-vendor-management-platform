@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { getAllDocuments, verifyDocument,rejectDocument} from "../services/documentService";
+import {getAllDocuments, verifyDocument,rejectDocument, viewDocument} from "../services/documentService";
 
 function AdminDocuments() {
 
@@ -58,7 +58,7 @@ function AdminDocuments() {
 
                             <tr key={doc.id}>
 
-                              <td>{doc.vendor}</td>
+                              <td>{doc.vendorName}</td>
 
                                 <td>{doc.documentType}</td>
 
@@ -66,7 +66,7 @@ function AdminDocuments() {
 
                                 <td>
 
-                                    <button>
+                                    <button onClick={()=> viewDocument(doc.id)}>
                                         View
                                     </button>
 

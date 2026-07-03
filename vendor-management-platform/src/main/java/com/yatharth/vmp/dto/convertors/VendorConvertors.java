@@ -13,6 +13,7 @@ public class VendorConvertors {
                 .companyName(vendor.getCompanyName())
                 .gstNumber(vendor.getGstNumber())
                 .panNumber(vendor.getPanNumber())
+                .status(vendor.getStatus().name())
                 .build();
     }
 
