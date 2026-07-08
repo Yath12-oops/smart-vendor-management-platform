@@ -6,6 +6,7 @@ import com.yatharth.vmp.dto.auth.RegisterRequest;
 import com.yatharth.vmp.entity.User;
 import com.yatharth.vmp.entity.Vendor;
 import com.yatharth.vmp.entity.enums.VendorStatus;
+import com.yatharth.vmp.exception.EmailAlreadyExistsException;
 import com.yatharth.vmp.repos.UserRepo;
 import com.yatharth.vmp.repos.VendorRepo;
 import com.yatharth.vmp.security.JwtService;
@@ -28,7 +29,7 @@ public class AuthService {
     public String register(RegisterRequest registerRequest){
 
         if(userRepo.findByEmail(registerRequest.getEmail()).isPresent()){
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
         User user=new User();
@@ -61,7 +62,7 @@ public class AuthService {
 
     private void sendEmail(User user) {
 
-        String body="Hello"+ user.getName() + "your profile has been created. Please complete your details" +
+        String body="Hello "+ user.getName() + " your profile has been created. Please complete your details" +
                 "upload your documents";
         SimpleMailMessage message= new SimpleMailMessage();
         message.setSubject("Registration On Platform successful");

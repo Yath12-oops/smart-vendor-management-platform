@@ -5,13 +5,14 @@ import lombok.Data;
 
 @Data
 public class VendorRequest {
-    @NotBlank
+
+    @NotBlank(message = "Company name is required")
     private String companyName;
 
-    @NotBlank
+    @NotBlank(message = "GST Number is required")
     private String gstNumber;
 
-    @NotBlank
+    @NotBlank(message = "PAN Number is required")
     private String panNumber;
 
     private Long userId;

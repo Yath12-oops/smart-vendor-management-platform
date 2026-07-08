@@ -6,6 +6,7 @@ import com.yatharth.vmp.dto.convertors.VendorConvertors;
 import com.yatharth.vmp.entity.User;
 import com.yatharth.vmp.entity.Vendor;
 import com.yatharth.vmp.entity.enums.VendorStatus;
+import com.yatharth.vmp.exception.UserNotFoundException;
 import com.yatharth.vmp.exception.VendorNotFoundException;
 import com.yatharth.vmp.repos.UserRepo;
 import com.yatharth.vmp.repos.VendorRepo;
@@ -25,7 +26,7 @@ public class VendorService {
 
         User user = userRepo.findById(vendorRequest.getUserId())
                 .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+                        new UserNotFoundException("User not found"));
 
         Vendor vendor=VendorConvertors.vendorRequestToVendor(vendorRequest);
         vendor.setUser(user);
@@ -87,7 +88,7 @@ public class VendorService {
 
         User user = userRepo.findById(userId)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+                        new UserNotFoundException("User not found"));
 
         Vendor vendor = vendorRepo.findByUser(user)
                 .orElseThrow(() ->

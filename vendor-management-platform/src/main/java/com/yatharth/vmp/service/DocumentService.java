@@ -4,6 +4,7 @@ import com.yatharth.vmp.dto.DocumentResponse;
 import com.yatharth.vmp.entity.Document;
 import com.yatharth.vmp.entity.Vendor;
 import com.yatharth.vmp.entity.enums.DocumentStatus;
+import com.yatharth.vmp.exception.DocumentNotFoundException;
 import com.yatharth.vmp.exception.VendorNotFoundException;
 import com.yatharth.vmp.repos.DocumentRepo;
 import com.yatharth.vmp.repos.VendorRepo;
@@ -64,7 +65,7 @@ public class DocumentService {
 
     public Document verifyDocument(Long id){
         Document document=documentRepo.findById(id)
-                .orElseThrow(()-> new RuntimeException("Document not found"));
+                .orElseThrow(()-> new DocumentNotFoundException("Document not found"));
 
         document.setStatus(DocumentStatus.VERIFIED);
 
@@ -73,7 +74,7 @@ public class DocumentService {
 
     public Document rejectDocument(Long id){
         Document document=documentRepo.findById(id)
-                .orElseThrow(()-> new RuntimeException("Document not found"));
+                .orElseThrow(()-> new DocumentNotFoundException("Document not found"));
 
         document.setStatus(DocumentStatus.REJECTED);
 
@@ -83,7 +84,7 @@ public class DocumentService {
     public Resource downloadDocument(Long id) throws MalformedURLException{
 
         Document document=documentRepo.findById(id).orElseThrow(()->
-                new RuntimeException("Document Not Found"));
+                new DocumentNotFoundException("Document Not Found"));
 
         Path path=Paths.get(document.getFilePath());
 

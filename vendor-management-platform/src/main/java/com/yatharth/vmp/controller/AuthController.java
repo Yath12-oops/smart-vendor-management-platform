@@ -4,6 +4,7 @@ import com.yatharth.vmp.dto.auth.AuthResponse;
 import com.yatharth.vmp.dto.auth.LoginRequest;
 import com.yatharth.vmp.dto.auth.RegisterRequest;
 import com.yatharth.vmp.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +19,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest registerRequest){
+    public String register(@Valid @RequestBody RegisterRequest registerRequest){
         return authService.register(registerRequest);
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequest loginRequest){
+    public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest){
         return authService.login(loginRequest);
     }
 }
