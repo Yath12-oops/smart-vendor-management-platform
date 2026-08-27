@@ -1,5 +1,6 @@
 package com.yatharth.vmp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yatharth.vmp.entity.enums.VendorStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Builder
+@Table(name = "vendors")
 public class Vendor {
 
     @Id
@@ -28,12 +30,15 @@ public class Vendor {
     private String panNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private VendorStatus status;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "vendor")
+    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
+    @JsonIgnore
     List<Document> documents;
 }

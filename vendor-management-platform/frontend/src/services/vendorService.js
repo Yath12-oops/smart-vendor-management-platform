@@ -1,20 +1,26 @@
-
-import axios from "axios";
-
-const API_URL = "http://localhost:8080/vendors";
+import API from "./api";
 
 export const getAllVendors = async () => {
+  const response = await API.get("/vendors");
+  return response.data;
+};
 
-    const token = localStorage.getItem("token");
+export const getVendorById = async (id) => {
+  const response = await API.get(`/vendors/${id}`);
+  return response.data;
+};
 
-    const response = await axios.get(
-        API_URL,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-    );
+export const getVendorByUserId = async (userId) => {
+  const response = await API.get(`/vendors/user/${userId}`);
+  return response.data;
+};
 
-    return response.data;
+export const updateVendor = async (id, data) => {
+  const response = await API.put(`/vendors/${id}`, data);
+  return response.data;
+};
+
+export const deleteVendor = async (id) => {
+  const response = await API.delete(`/vendors/${id}`);
+  return response.data;
 };

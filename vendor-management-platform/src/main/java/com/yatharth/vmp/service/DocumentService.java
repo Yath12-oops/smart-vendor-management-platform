@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,85 +29,83 @@ public class DocumentService {
     private final DocumentRepo documentRepo;
     private final VendorRepo vendorRepo;
 
-    public Document uploadDocument(MultipartFile file,String documentType,Long vendorId) throws Exception{
-       Vendor vendor=vendorRepo.findById(vendorId).orElseThrow(()-> new VendorNotFoundException("Vendor not found"));
+    public Document uploadDocument(MultipartFile file, String documentType, Long vendorId) throws Exception {
+        Vendor vendor = vendorRepo.findById(vendorId)
+                .orElseThrow(() -> new VendorNotFoundException("Vendor not found"));
 
-        String uploadDir = System.getProperty("user.dir")
-                + File.separator
-                + "uploads";
+        String uploadDir = System.getProperty("user.dir") + File.separator + "uploads";
 
-       File directory=new File(uploadDir);
+        File directory = new File(uploadDir);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
-       if(!directory.exists()) directory.mkdirs();
+        String originalFilename = file.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
 
-       String filename=file.getOriginalFilename();
+        String uniqueFilename = UUID.randomUUID().toString() + extension;
+        String filePath = uploadDir + File.separator + uniqueFilename;
 
-        String filePath = uploadDir
-                + File.separator
-                + filename;
+        file.transferTo(new File(filePath));
 
-        System.out.println(filePath);
+        Document document = new Document();
+        document.setDocumentType(documentType);
+        document.setFileName(originalFilename);
+        document.setFilePath(filePath);
+        document.setStatus(DocumentStatus.PENDING);
+        document.setVendor(vendor);
 
-       file.transferTo(new File(filePath));
-
-       Document document=new Document();
-       document.setDocumentType(documentType);
-       document.setFileName(filename);
-       document.setFilePath(filePath);
-       document.setStatus(DocumentStatus.PENDING);
-       document.setVendor(vendor);
-
-       return documentRepo.save(document);
+        return documentRepo.save(document);
     }
 
-    public List<Document> getDocumentsByVendor(Long vendorId){
+    public List<Document> getDocumentsByVendor(Long vendorId) {
         return documentRepo.findByVendorId(vendorId);
     }
 
-    public Document verifyDocument(Long id){
-        Document document=documentRepo.findById(id)
-                .orElseThrow(()-> new DocumentNotFoundException("Document not found"));
+    public Document verifyDocument(Long id) {
+        Document document = documentRepo.findById(id)
+                .orElseThrow(() -> new DocumentNotFoundException("Document not found"));
 
         document.setStatus(DocumentStatus.VERIFIED);
 
         return documentRepo.save(document);
     }
 
-    public Document rejectDocument(Long id){
-        Document document=documentRepo.findById(id)
-                .orElseThrow(()-> new DocumentNotFoundException("Document not found"));
+    public Document rejectDocument(Long id) {
+        Document document = documentRepo.findById(id)
+                .orElseThrow(() -> new DocumentNotFoundException("Document not found"));
 
         document.setStatus(DocumentStatus.REJECTED);
 
         return documentRepo.save(document);
     }
 
-    public Resource downloadDocument(Long id) throws MalformedURLException{
+    public Resource downloadDocument(Long id) throws MalformedURLException {
+        Document document = documentRepo.findById(id)
+                .orElseThrow(() -> new DocumentNotFoundException("Document Not Found"));
 
-        Document document=documentRepo.findById(id).orElseThrow(()->
-                new DocumentNotFoundException("Document Not Found"));
+        Path path = Paths.get(document.getFilePath());
+        Resource resource = new UrlResource(path.toUri());
 
-        Path path=Paths.get(document.getFilePath());
+        if (!resource.exists()) {
+            throw new DocumentNotFoundException("Document file not found");
+        }
 
-        return new UrlResource(path.toUri());
+        return resource;
     }
 
     public List<DocumentResponse> getAllDocuments() {
-
         return documentRepo.findAll()
                 .stream()
                 .map(document -> new DocumentResponse(
-
                         document.getId(),
-
                         document.getVendor().getCompanyName(),
-
                         document.getDocumentType(),
-
                         document.getFileName(),
-
                         document.getStatus().name()
-
                 ))
                 .toList();
     }

@@ -54,9 +54,15 @@ public class VendorService {
                 .orElseThrow(() ->
                         new VendorNotFoundException("Vendor not found"));
 
-        vendor.setCompanyName(request.getCompanyName());
-        vendor.setGstNumber(request.getGstNumber());
-        vendor.setPanNumber(request.getPanNumber());
+        if (request.getCompanyName() != null) {
+            vendor.setCompanyName(request.getCompanyName());
+        }
+        if (request.getGstNumber() != null) {
+            vendor.setGstNumber(request.getGstNumber());
+        }
+        if (request.getPanNumber() != null) {
+            vendor.setPanNumber(request.getPanNumber());
+        }
 
         return VendorConvertors.vendorToVendorResponse(vendorRepo.save(vendor));
     }

@@ -6,6 +6,7 @@ import com.yatharth.vmp.dto.auth.RegisterRequest;
 import com.yatharth.vmp.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +20,17 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public String register(@Valid @RequestBody RegisterRequest registerRequest){
-        return authService.register(registerRequest);
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest registerRequest){
+        return ResponseEntity.ok(authService.register(registerRequest));
+    }
+
+    @PostMapping("/register-admin")
+    public ResponseEntity<String> registerAdmin(@Valid @RequestBody RegisterRequest registerRequest){
+        return ResponseEntity.ok(authService.registerAdmin(registerRequest));
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest){
-        return authService.login(loginRequest);
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest){
+        return ResponseEntity.ok(authService.login(loginRequest));
     }
 }

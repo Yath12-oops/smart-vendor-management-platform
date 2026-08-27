@@ -10,22 +10,27 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "documents")
 public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
+    @Column(nullable = false)
     private String documentType;
 
+    @Column(nullable = false)
     private String fileName;
 
+    @Column(nullable = false)
     private String filePath;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private DocumentStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "vendor_id")
+    @JoinColumn(name = "vendor_id", nullable = false)
     @JsonIgnore
     private Vendor vendor;
 }

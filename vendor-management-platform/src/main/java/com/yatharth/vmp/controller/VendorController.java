@@ -5,6 +5,7 @@ import com.yatharth.vmp.dto.VendorResponse;
 import com.yatharth.vmp.service.VendorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,33 +18,33 @@ public class VendorController {
     private final VendorService vendorService;
 
     @PostMapping
-    public VendorResponse createVendor(@Valid @RequestBody VendorRequest vendorRequest){
-        return vendorService.createVendor(vendorRequest);
+    public ResponseEntity<VendorResponse> createVendor(@Valid @RequestBody VendorRequest vendorRequest){
+        return ResponseEntity.ok(vendorService.createVendor(vendorRequest));
     }
 
     @GetMapping
-    public List<VendorResponse> getAllVendors() {
-        return vendorService.getAllVendors();
+    public ResponseEntity<List<VendorResponse>> getAllVendors() {
+        return ResponseEntity.ok(vendorService.getAllVendors());
     }
 
     @GetMapping("/{id}")
-    public VendorResponse getVendorById(@PathVariable Long id) {
-        return vendorService.getVendorById(id);
+    public ResponseEntity<VendorResponse> getVendorById(@PathVariable Long id) {
+        return ResponseEntity.ok(vendorService.getVendorById(id));
     }
 
     @PutMapping("/{id}")
-    public VendorResponse updateVendor(@PathVariable Long id, @Valid @RequestBody VendorRequest request) {
-        return vendorService.updateVendor(id, request);
+    public ResponseEntity<VendorResponse> updateVendor(@PathVariable Long id, @RequestBody VendorRequest request) {
+        return ResponseEntity.ok(vendorService.updateVendor(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public String deleteVendor(@PathVariable Long id) {
+    public ResponseEntity<String> deleteVendor(@PathVariable Long id) {
         vendorService.deleteVendor(id);
-        return "Vendor deleted successfully";
+        return ResponseEntity.ok("Vendor deleted successfully");
     }
 
     @GetMapping("/user/{userId}")
-    public VendorResponse getVendorByUserId(@PathVariable Long userId) {
-        return vendorService.getVendorByUserId(userId);
+    public ResponseEntity<VendorResponse> getVendorByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(vendorService.getVendorByUserId(userId));
     }
 }

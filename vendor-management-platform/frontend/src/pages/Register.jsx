@@ -1,158 +1,132 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import { register } from "../services/authService";
 
 function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-const [name, setName] = useState("");
-const [email, setEmail] = useState("");
-const [password, setPassword] = useState("");
-
-const navigate = useNavigate();
-
-const handleRegister = async (e) => {
-
+  const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
+    setLoading(true);
 
     try {
-
-        await axios.post(
-            "http://localhost:8080/auth/register",
-            {
-                name,
-                email,
-                password
-            }
-        );
-
-        alert("Registration Successful");
-
-        navigate("/");
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Registration Failed");
+      await register(name, email, password);
+      navigate("/");
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
-};
+  };
 
-return (
+  return (
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2>VendorHub</h2>
+        <p className="subtitle">Create your vendor account</p>
 
-    <div
-        style={{
-            minHeight: "100vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#0f172a"
-        }}
-    >
+        {error && (
+          <div style={{
+            padding: "1rem",
+            backgroundColor: "rgba(239, 68, 68, 0.1)",
+            border: "1px solid var(--danger)",
+            borderRadius: "var(--radius-sm)",
+            color: "var(--danger)",
+            marginBottom: "1.5rem",
+            fontSize: "0.9rem"
+          }}>
+            {error}
+          </div>
+        )}
 
-        <div
-            style={{
-                backgroundColor: "#1e293b",
-                padding: "40px",
-                borderRadius: "15px",
-                width: "400px",
-                boxShadow: "0 8px 20px rgba(0,0,0,0.4)"
-            }}
-        >
+        <form onSubmit={handleRegister}>
+          <div className="form-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              placeholder="Enter your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
-            <h2
-                style={{
-                    color: "white",
-                    textAlign: "center",
-                    marginBottom: "25px"
-                }}
-            >
-                Vendor Registration
-            </h2>
+          <div className="form-group">
+            <label>Email Address</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-            <form onSubmit={handleRegister}>
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              placeholder="Create a password (min 6 characters)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+            />
+          </div>
 
-                <input
-                    type="text"
-                    placeholder="Enter Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    style={{
-                        width: "100%",
-                        padding: "12px",
-                        marginBottom: "15px",
-                        boxSizing: "border-box"
-                    }}
-                />
+          <div className="form-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
 
-                <input
-                    type="email"
-                    placeholder="Enter Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    style={{
-                        width: "100%",
-                        padding: "12px",
-                        marginBottom: "15px",
-                        boxSizing: "border-box"
-                    }}
-                />
+          <button
+            type="submit"
+            className="btn btn-secondary btn-full"
+            disabled={loading}
+            style={{ marginTop: "1rem" }}
+          >
+            {loading ? "Creating account..." : "Create Account"}
+          </button>
+        </form>
 
-                <input
-                    type="password"
-                    placeholder="Enter Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    style={{
-                        width: "100%",
-                        padding: "12px",
-                        marginBottom: "20px",
-                        boxSizing: "border-box"
-                    }}
-                />
-
-                <button
-                    type="submit"
-                    style={{
-                        width: "100%",
-                        padding: "12px",
-                        backgroundColor: "#22c55e",
-                        color: "white",
-                        border: "none",
-                        cursor: "pointer"
-                    }}
-                >
-                    Register
-                </button>
-
-            </form>
-
-            <p
-                style={{
-                    color: "white",
-                    textAlign: "center",
-                    marginTop: "15px"
-                }}
-            >
-                Already have an account?
-
-                <Link
-                    to="/"
-                    style={{
-                        color: "#60a5fa",
-                        marginLeft: "5px"
-                    }}
-                >
-                    Login
-                </Link>
-
-            </p>
-
-        </div>
-
+        <p style={{
+          textAlign: "center",
+          marginTop: "1.5rem",
+          color: "var(--text-secondary)",
+          fontSize: "0.95rem"
+        }}>
+          Already have an account?{" "}
+          <Link to="/" style={{ fontWeight: "600" }}>
+            Sign in
+          </Link>
+        </p>
+      </div>
     </div>
-);
-
+  );
 }
 
 export default Register;
